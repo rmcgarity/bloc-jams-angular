@@ -1,0 +1,1 @@
+var ralphModule = angular.module('ralphApp', []);
