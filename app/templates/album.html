@@ -3,7 +3,7 @@
             <section class="clearfix">
                 <div class="column half">
                     Albums
-                    <img src="../assets/images/album_covers/01.png" class="album-cover-art">
+                    <img src="/assets/images/album_covers/01.png" class="album-cover-art">
                 </div>
                 <div class="album-view-details column half">
                     <h2 class="album-view-title">The Colors</h2>
@@ -12,6 +12,11 @@
                 </div>
             </section>
             <table class="album-view-song-list">
+                <tr class="album-view-song-item" ng-repeat="song in songContainer.songs">
+                    <td class="song-item-number" data-song-number="{{$index + 1}}">{{$index + 1}}</td>
+                    <td class="song-item-title"> {{song.name}}</td>
+                    <td class="song-item-duration">{{song.length}}</td>
+                </tr>
             </table>
         </main>
 

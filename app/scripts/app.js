@@ -1,17 +1,18 @@
 var ralphModule = angular.module('ralphApp', ['ui.router']);
 
 ralphModule.controller("LandingController", function($scope) {
-    // Placeholder to check program behavior
-    alert("Hello World from Landing!");
-})
+    $scope.blocTagline = "Turn the music up!";
+});
 ralphModule.controller("CollectionController", function($scope) {
-    // Placeholder to check program behavior
-    alert("Hello World from Collection!");
-})
+    $scope.collectionContainer = {
+        collection: collectionList
+    };
+});
 ralphModule.controller("AlbumController", function($scope) {
-    // Placeholder to check program behavior
-    alert("Hello World from Album!");
-})
+    $scope.songContainer = {
+        songs: albumPicasso.songs
+    }
+});
 
 ralphModule.config(function($stateProvider, $locationProvider) {
     $locationProvider.html5Mode({
@@ -21,18 +22,18 @@ ralphModule.config(function($stateProvider, $locationProvider) {
     // $locationProvider.otherwise("/landing")
     $stateProvider
         .state('landing', {
-            url: '/landing',
+            url: '/',
             controller: 'LandingController',
-            templateUrl: '../templates/landing.html'
+            templateUrl: '/templates/landing.html'
         })
         .state('collection', {
             url: '/collection',
             controller: 'CollectionController',
-            templateUrl: '../templates/collection.html'
+            templateUrl: '/templates/collection.html'
         })
         .state('album', {
             url: '/album',
             controller: 'AlbumController',
-            templateUrl: '../templates/album.html'
+            templateUrl: '/templates/album.html'
         })
 });
