@@ -1,13 +1,11 @@
+// var ralphModule = angular.module('ralphApp', ['ui.router', 'albumModule']);
 var ralphModule = angular.module('ralphApp', ['ui.router']);
-
 ralphModule.controller("LandingController", function($scope) {
     $scope.blocTagline = "Turn the music up!";
 });
-ralphModule.controller("CollectionController", function($scope) {
-    $scope.collectionContainer = {
-        collection: collectionList
-    };
-});
+ralphModule.controller("CollectionController", ["albums", "$scope", function(albums, $scope) {
+    $scope.albums = albums;
+}]);
 ralphModule.controller("AlbumController", function($scope) {
     $scope.songContainer = {
         songs: albumPicasso.songs

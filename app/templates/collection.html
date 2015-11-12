@@ -1,19 +1,19 @@
-    <body class="collection">
+    <body class="collection" ng-controller="CollectionController">
         <section class="album-covers container clearfix">
-            <div class="collection-album-container column fourth" ng-repeat="collection in collectionContainer.collection">
-                <img src="{{ collection.image }}"/> <!-- assets/images/album_covers/01.png"/> -->
+            <div class="collection-album-container column fourth" ng-repeat="album in albums">
+                <img src="{{ album.image }}"/> <!-- assets/images/album_covers/01.png"/> -->
                 <div class="collection-album-info caption">
                     <p>
-                        <a class="album-name" href="/album.html"> {{ collection.name }} <!-- The Colors </a> -->
+                        <a ui-sref="album" class="album-name"> {{ album.name }} <!-- The Colors </a> -->
                         <br/>
-                        <a href="/album.html"> {{ collection.composer }} <!-- Pablo Picasso </a> -->
+                        <a ui-sref="album"> {{ album.composer }} <!-- Pablo Picasso </a> -->
                         <br/>
-                        {{ collection.numberOfSongs }} <!-- X songs -->
+                        {{ album.numberOfSongs }} <!-- X songs -->
                         <br/>
                     </p>
                 </div>
             </div>    
         </section>
         <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    </body>
+     </body>
 
