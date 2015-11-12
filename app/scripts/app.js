@@ -1,5 +1,5 @@
-// var ralphModule = angular.module('ralphApp', ['ui.router', 'albumModule']);
 var ralphModule = angular.module('ralphApp', ['ui.router']);
+// var ralphModule = angular.module('ralphApp', ['ui.router']);
 ralphModule.controller("LandingController", function($scope) {
     $scope.blocTagline = "Turn the music up!";
 });
