@@ -16,20 +16,15 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
     $scope.songIsPlaying = false;
     $scope.currentTime = MusicPlayer.currentTime;
     
-    $scope.songClickHandler = function(rowMode, tableIndex, song) {
+    $scope.songClickHandler = function(tableIndex, song) {
         // var index = 1;
-        console.log("songClickHandler, rowMode: " + rowMode  + ", index: ", tableIndex + ", song name: " + song.name);
-        if (rowMode == "notSelected") {
-            MusicPlayer.setSong(tableIndex+1);
-            $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
-            $scope.songIsPlaying = true;
-            MusicPlayer.currentSoundFile.play();
-            MusicPlayer.updatePlayerBarSong();
-            MusicPlayer.updateSeekBarWhileSongPlays();
-        }
-        if (rowMode != "notSelected") {
-            $scope.playPauseClick();
-        }
+        console.log("songClickHandler, index: ", tableIndex + ", song name: " + song.name);
+        MusicPlayer.setSong(tableIndex+1);
+        $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
+        $scope.songIsPlaying = true;
+        MusicPlayer.currentSoundFile.play();
+        MusicPlayer.updatePlayerBarSong();
+        MusicPlayer.updateSeekBarWhileSongPlays();
     };
     $scope.playPauseClick = function() {
         console.log("playPause called");

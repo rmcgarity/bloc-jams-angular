@@ -13,20 +13,24 @@
             <table class="album-view-song-list">
                 <tr class="album-view-song-item" ng-repeat="song in thisAlbum.songs">
                     <!-- Only one of the following three <td> items is shown - two are hidden -->
+                    
+                    <!-- Case 1: Didn't click on the currently selected song -->
                     <td ng-hide="selectedSong == {{$index + 1}}" class="song-item-number" data-song-number="{{$index + 1}}">
-                        <a ng-click="songClickHandler('notSelected', $index, song)" ng-Mouseover="mouseIsOver=true" ng-Mouseleave="mouseIsOver=false">
-                            <span ng-hide="mouseIsOver">
+                        <a ng-click="songClickHandler($index, song)" ng-Mouseover="mouseIsOver=true" ng-Mouseleave="mouseIsOver=false">
+                            <span ng-hide="mouseIsOver"> <!-- show the number if mouse is not over the number -->
                                   {{$index + 1}}
                             </span>
-                            <span ng-show="mouseIsOver" class="ion-play">
+                            <span ng-show="mouseIsOver" class="ion-play"> <!-- show the play button if moust is over the number -->
                             </span>
                         </a>
                     </td>
+                    <!-- Case 2: Song is selected and song is playing -->
                     <td ng-show="selectedSong == {{$index + 1}} && songIsPlaying">
-                        <a ng-click="songClickHandler('songIsPlaying', $index, song)" class="album-song-button"><span class="ion-pause"></span></a>
+                        <a ng-click="playPauseClick()" class="album-song-button"><span class="ion-pause"></span></a>
                     </td>
+                    <!-- Case 3: Song is selected and song is paused -->
                     <td ng-show="selectedSong == {{$index + 1}} && !songIsPlaying">
-                        <a ng-click="songClickHandler('songIsPaused', $index, song)" class="album-song-button"><span class="ion-play"></span></a>
+                        <a ng-click="playPauseClick()" class="album-song-button"><span class="ion-play"></span></a>
                     </td>
                     <td class="song-item-title"> {{song.name}}</td>
                     <td class="song-item-duration">{{song.length}}</td>
