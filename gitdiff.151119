@@ -1,0 +1,342 @@
+diff --git a/app/pages/index.html b/app/pages/index.html
+index 9f218ea..023eb77 100644
+--- a/app/pages/index.html
++++ b/app/pages/index.html
+@@ -11,6 +11,7 @@
+     <link rel="stylesheet" type="text/css" href="/styles/landing.css">
+     <link rel="stylesheet" type="text/css" href="/styles/collection.css">
+     <link rel="stylesheet" type="text/css" href="/styles/album.css">
++    <link rel="stylesheet" type="text/css" href="styles/player_bar.css">
+ </head>
+ <body class="landing">
+     <nav class="navbar"> <!-- nav bar -->
+@@ -25,9 +26,11 @@
+     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.24/angular.min.js"></script>
+     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script> -->
+     <script src="//angular-ui.github.io/ui-router/release/angular-ui-router.js"></script>
+-    <script src="/scripts/fixtures.js"></script>
++    <script src="https://cdnjs.cloudflare.com/ajax/libs/buzz/1.1.10/buzz.min.js"></script>
++
+     <script src="/scripts/app.js"></script>
+-    <script src="/scripts/collection.js"></script>
+- 
++    <script src="/scripts/fixtures.js"></script>
++    <script src="/scripts/collectionServices.js"></script>
++    <script src="/scripts/albumServices.js"></script>
+ </body>
+ </html>
+diff --git a/app/scripts/app.js b/app/scripts/app.js
+index 5d541de..b4fb396 100644
+--- a/app/scripts/app.js
++++ b/app/scripts/app.js
+@@ -1,16 +1,68 @@
+ var ralphModule = angular.module('ralphApp', ['ui.router']);
+ // var ralphModule = angular.module('ralphApp', ['ui.router']);
++
+ ralphModule.controller("LandingController", function($scope) {
+     $scope.blocTagline = "Turn the music up!";
+ });
+-ralphModule.controller("CollectionController", ["albums", "$scope", function(albums, $scope) {
++ralphModule.controller("CollectionController", ["$scope", "albums", "MusicPlayer", function($scope, albums, MusicPlayer) {
+     $scope.albums = albums;
++    //var person = "Liz";
++    //MusicPlayer.sayHigh(person);
++    //console.log(MusicPlayer.theSayHighVar);
++    //MusicPlayer.theSayHighVar = "George";
++    //console.log(MusicPlayer.theSayHighVar);    
++}]);
++ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlayer", function($scope, albumPicasso, MusicPlayer) {
++    MusicPlayer.currentAlbum = albumPicasso;
++    $scope.thisAlbum = MusicPlayer.currentAlbum;
++    $scope.totalTime = MusicPlayer.totalTime;
++    console.log("thisAlbum name: '" + $scope.thisAlbum.name + "'");
++    $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
++    $scope.songIsPlaying = false;
++    $scope.currentTime = MusicPlayer.currentTime;
++    
++    $scope.songClickHandler = function(rowMode, tableIndex, song) {
++        // var index = 1;
++        console.log("songClickHandler, rowMode: " + rowMode  + ", index: ", tableIndex + ", song name: " + song.name);
++        if (rowMode == "notSelected") {
++            MusicPlayer.setSong(tableIndex+1);
++            $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
++            $scope.songIsPlaying = true;
++            MusicPlayer.currentSoundFile.play();
++            MusicPlayer.updatePlayerBarSong();
++            MusicPlayer.updateSeekBarWhileSongPlays();
++        }
++        if (rowMode != "notSelected") {
++            $scope.playPauseClick();
++        }
++    };
++    $scope.playPauseClick = function() {
++        console.log("playPause called");
++        if (MusicPlayer.currentSoundFile.isPaused()) {
++            MusicPlayer.currentSoundFile.play();
++            MusicPlayer.updateSeekBarWhileSongPlays();
++        } else {
++            MusicPlayer.currentSoundFile.pause();
++        }
++        $scope.songIsPlaying = !$scope.songIsPlaying;
++    };
++    $scope.nextPrevSongClick = function(direction) {
++        console.log("nexPreviousClick called");
++        var currentSongIndex = MusicPlayer.trackIndex(MusicPlayer.currentAlbum, MusicPlayer.currentSongFromAlbum);
++        // Increase for next or decrease for prev current by 1, modulo the number of songs
++        currentSongIndex = (currentSongIndex + MusicPlayer.currentAlbum.songs.length + direction) % MusicPlayer.currentAlbum.songs.length;
++
++        // Set a new current song
++        MusicPlayer.setSong(currentSongIndex+1);
++        MusicPlayer.currentSoundFile.play();
++        MusicPlayer.updatePlayerBarSong();
++        MusicPlayer.updateSeekBarWhileSongPlays();
++
++        // Update the Player Bar and Song List
++        $scope.selectedSong = currentSongIndex +1;
++        $scope.songIsPlaying = true;
++    };
+ }]);
+-ralphModule.controller("AlbumController", function($scope) {
+-    $scope.songContainer = {
+-        songs: albumPicasso.songs
+-    }
+-});
+ 
+ ralphModule.config(function($stateProvider, $locationProvider) {
+     $locationProvider.html5Mode({
+diff --git a/app/scripts/collection.js b/app/scripts/collection.js
+deleted file mode 100644
+index ae9a356..0000000
+--- a/app/scripts/collection.js
++++ /dev/null
+@@ -1,28 +0,0 @@
+-// var albumModule = angular.module('albumModule');
+-// angular.module('albumModule')
+-ralphModule
+-    .factory("theImage", function() {
+-        // I followed the pattern given at www.sitepoint.com/tidy-angular-controllers-factories-services/
+-        var theImage = function(index) {
+-            // The slice function below forces a leading zero on numbers less than 10
+-            return "/assets/images/album_covers/" + ("0" + index).slice(-2) + ".png";
+-        };
+-        return(theImage);
+-    })
+-    .factory("albums", ["theImage", function(theImage) {
+-        aIndex = 1; // Album Index
+-        return [
+-            {image: theImage(aIndex++), name: "The Colors", composer: "Picasso", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "More Colors", composer: "Monet", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "Water", composer: "Manet", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "Impressionism", composer: "Renoir", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "Dark", composer: "Degas", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "The Points", composer: "Seurat", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "Bright Colors", composer: "van Gogh", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "Sails", composer: "Caillebot", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "The Red", composer: "Rousseau", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "Light", composer: "Bazille", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "The Shadows", composer: "Hassam", numberOfSongs: 8},
+-            {image: theImage(aIndex++), name: "The Less Known", composer: "Weir", numberOfSongs: 8}
+-            ];
+-}]);
+diff --git a/app/scripts/fixtures.js b/app/scripts/fixtures.js
+index f16aa7d..b522d73 100644
+--- a/app/scripts/fixtures.js
++++ b/app/scripts/fixtures.js
+@@ -1,31 +1,34 @@
+ // Example Album
+-var albumPicasso = {
+-    name: 'The Colors',
+-    artist: 'Pablo Picasso',
+-    label: 'Cubism',
+-    year: '1881',
+-    albumArtUrl: 'assets/images/album_covers/01.png',
+-    songs: [
+-        { name: 'Blue', length: '2:42', audioUrl: '/assets/music/blue' },
+-        { name: 'Green', length: '1:44', audioUrl: '/assets/music/green' },
+-        { name: 'Red', length: '4:29', audioUrl: '/assets/music/red' },
+-        { name: 'Pink', length: '2:34', audioUrl: '/assets/music/pink'},
+-        { name: 'Magenta', length: '6:15', audioUrl: '/assets/music/magenta'}
+-    ]
+-};
++ralphModule
++    .value("albumPicasso", { 
++// var albumPicasso = {
++        name: 'The Colors',
++        artist: 'Pablo Picasso',
++        label: 'Cubism',
++        year: '1881',
++        albumArtUrl: 'assets/images/album_covers/01.png',
++        songs: [
++            { name: 'Blue', length: '2:42', audioUrl: 'assets/music/blue' },
++            { name: 'Green', length: '1:44', audioUrl: 'assets/music/green' },
++            { name: 'Red', length: '4:29', audioUrl: 'assets/music/red' },
++            { name: 'Pink', length: '2:34', audioUrl: 'assets/music/pink'},
++            { name: 'Magenta', length: '6:15', audioUrl: 'assets/music/magenta'}
++        ]
++    })
+ 
+ // Another Example Album
+-var albumMarconi = {
+-    name: 'The Telephone',
+-    artist: 'Guglielmo Marconi',
+-    label: 'EM',
+-    year: '1909',
+-    albumArtUrl: 'assets/images/album_covers/20.png',
+-    songs: [
+-        { name: 'Hello, Operator?', length: '1:01' },
+-        { name: 'Ring, ring, ring', length: '5:01' },
+-        { name: 'Fits in your pocket', length: '3:21'},
+-        { name: 'Can you hear me now?', length: '3:14' },
+-        { name: 'Wrong phone number', length: '2:15'}
+-    ]
+-};
++    .value("albumMarconi", { 
++// var albumMarconi = {
++        name: 'The Telephone',
++        artist: 'Guglielmo Marconi',
++        label: 'EM',
++        year: '1909',
++        albumArtUrl: 'assets/images/album_covers/20.png',
++        songs: [
++            { name: 'Hello, Operator?', length: '1:01' },
++            { name: 'Ring, ring, ring', length: '5:01' },
++            { name: 'Fits in your pocket', length: '3:21'},
++            { name: 'Can you hear me now?', length: '3:14' },
++            { name: 'Wrong phone number', length: '2:15'}
++        ]
++    });
+diff --git a/app/templates/album.html b/app/templates/album.html
+index cadea95..0cf999a 100644
+--- a/app/templates/album.html
++++ b/app/templates/album.html
+@@ -2,63 +2,86 @@
+         <main class="album-view container narrow">
+             <section class="clearfix">
+                 <div class="column half">
+-                    Albums
+-                    <img src="/assets/images/album_covers/01.png" class="album-cover-art">
++                    <img src="{{thisAlbum.albumArtUrl}}" class="album-cover-art">
+                 </div>
+                 <div class="album-view-details column half">
+-                    <h2 class="album-view-title">The Colors</h2>
+-                    <h3 class="album-view-artist">Pablo Picasso</h3>
+-                    <h5 class="album-view-release-info">1909 Spanish Records</h5>
++                    <h2 class="album-view-title">{{thisAlbum.name}}</h2>
++                    <h3 class="album-view-artist">{{thisAlbum.artist}}</h3>
++                    <h5 class="album-view-release-info">{{thisAlbum.year}} {{thisAlbum.label}}</h5>
+                 </div>
+             </section>
+             <table class="album-view-song-list">
+-                <tr class="album-view-song-item" ng-repeat="song in songContainer.songs">
+-                    <td class="song-item-number" data-song-number="{{$index + 1}}">{{$index + 1}}</td>
++                <tr class="album-view-song-item" ng-repeat="song in thisAlbum.songs">
++                    <!-- Only one of the following three <td> items is shown - two are hidden -->
++                    <td ng-hide="selectedSong == {{$index + 1}}" class="song-item-number" data-song-number="{{$index + 1}}">
++                        <a ng-click="songClickHandler('notSelected', $index, song)" ng-Mouseover="mouseIsOver=true" ng-Mouseleave="mouseIsOver=false">
++                            <span ng-hide="mouseIsOver">
++                                  {{$index + 1}}
++                            </span>
++                            <span ng-show="mouseIsOver" class="ion-play">
++                            </span>
++                        </a>
++                    </td>
++                    <td ng-show="selectedSong == {{$index + 1}} && songIsPlaying">
++                        <a ng-click="songClickHandler('songIsPlaying', $index, song)" class="album-song-button"><span class="ion-pause"></span></a>
++                    </td>
++                    <td ng-show="selectedSong == {{$index + 1}} && !songIsPlaying">
++                        <a ng-click="songClickHandler('songIsPaused', $index, song)" class="album-song-button"><span class="ion-play"></span></a>
++                    </td>
+                     <td class="song-item-title"> {{song.name}}</td>
+                     <td class="song-item-duration">{{song.length}}</td>
+                 </tr>
+             </table>
++            </div>
+         </main>
+ 
+         <section class="player-bar">
+             <div class="container">
+                 <div class="player-bar-control-group left-controls">
+                     <a class="previous">
+-                        <span class="ion-skip-backward"></span>
++                        <span ng-click="nextPrevSongClick(-1)" class="ion-skip-backward"></span>
++                    </a>
++                    <!-- Only one of these two spans is displayed -->
++                    <span ng-show="songIsPlaying" >
++                    <a class="play-pause">
++                        <span ng-click="playPauseClick()" class="ion-pause"></span>
+                     </a>
++                    </span>
++                    <span ng-hide="songIsPlaying">
+                     <a class="play-pause">
+-                        <span class="ion-play"></span>
++                        <span ng-click="playPauseClick()" class="ion-play"></span>
+                     </a>
++                    </span>
+                     <a class="next">
+-                        <span class="ion-skip-forward"></span>
++                        <span ng-click="nextPrevSongClick(1)" class="ion-skip-forward"></span>
+                     </a>
+                 </div>
+                 <div class="player-bar-control-group currently-playing">
+-                    <h2 class="song-name"></h2>
+-                    <h2 class="artist-song-mobile"></h2>
++                    <h2 class="song-name">{{thisAlbum.songs[selectedSong-1].name}}</h2>
++                    <h2 class="artist-song-mobile">{{thisAlbum.songs[selectedSong-1].name}} - {{thisAlbum.artist}}</h2>
+                     <div class="seek-control">
+-                        <div class="seek-bar">
++                        <div ng-click="playerSeekBarClick()" class="seek-bar">
+                             <div class="fill"></div>
+                             <div class="thumb"></div>
+                         </div>
+-                        <div class="current-time">2:30</div>
+-                        <div class="total-time">4:45</div>
++                        <div class="current-time">TBD{{currentTime}}</div>
++                        <!-- Refactor: need to use the totalTime derived from the sound file, not the one in the album info --> 
++                        <div class="total-time">{{thisAlbum.songs[selectedSong-1].length}}</div>
+                     </div>
+-                    <h3 class="artist-name"></h3>
++                    <h3 class="artist-name">{{thisAlbum.artist}}</h3>
+                 </div>
+                 <div class="player-bar-control-group right-controls">
+                     <div class="volume">
+                         <span class="ion-volume-high"></span>
+                         <div class="seek-bar">
+                             <div class="fill"></div>
+-                            <div class="thumb"></div>
++                            <div ng-mousedown="thumbMousedown()" class="thumb"></div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </section>
+         <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+-        <script src="https://cdnjs.cloudflare.com/ajax/libs/buzz/1.1.10/buzz.min.js"></script>
+         <!-- <script src="scripts/fixtures.js"></script>
+         <script src="scripts/album.js"></script> -->
+     </body>
+\ No newline at end of file
+diff --git a/app/templates/collection.html b/app/templates/collection.html
+index b14a9b7..f904ccc 100644
+--- a/app/templates/collection.html
++++ b/app/templates/collection.html
+@@ -1,14 +1,16 @@
+     <body class="collection" ng-controller="CollectionController">
+         <section class="album-covers container clearfix">
+             <div class="collection-album-container column fourth" ng-repeat="album in albums">
+-                <img src="{{ album.image }}"/> <!-- assets/images/album_covers/01.png"/> -->
++                <a ui-sref="album">
++                    <img src="{{ album.image }}"/>
++                </a>
+                 <div class="collection-album-info caption">
+                     <p>
+-                        <a ui-sref="album" class="album-name"> {{ album.name }} <!-- The Colors </a> -->
++                        <a ui-sref="album" class="album-name"> {{ album.name }}
+                         <br/>
+-                        <a ui-sref="album"> {{ album.composer }} <!-- Pablo Picasso </a> -->
++                        <a ui-sref="album"> {{ album.composer }}
+                         <br/>
+-                        {{ album.numberOfSongs }} <!-- X songs -->
++                        {{ album.numberOfSongs }}
+                         <br/>
+                     </p>
+                 </div>

@@ -2,18 +2,32 @@
         <main class="album-view container narrow">
             <section class="clearfix">
                 <div class="column half">
-                    Albums
-                    <img src="/assets/images/album_covers/01.png" class="album-cover-art">
+                    <img src="{{thisAlbum.albumArtUrl}}" class="album-cover-art">
                 </div>
                 <div class="album-view-details column half">
-                    <h2 class="album-view-title">The Colors</h2>
-                    <h3 class="album-view-artist">Pablo Picasso</h3>
-                    <h5 class="album-view-release-info">1909 Spanish Records</h5>
+                    <h2 class="album-view-title">{{thisAlbum.name}}</h2>
+                    <h3 class="album-view-artist">{{thisAlbum.artist}}</h3>
+                    <h5 class="album-view-release-info">{{thisAlbum.year}} {{thisAlbum.label}}</h5>
                 </div>
             </section>
             <table class="album-view-song-list">
-                <tr class="album-view-song-item" ng-repeat="song in songContainer.songs">
-                    <td class="song-item-number" data-song-number="{{$index + 1}}">{{$index + 1}}</td>
+                <tr class="album-view-song-item" ng-repeat="song in thisAlbum.songs">
+                    <!-- Only one of the following three <td> items is shown - two are hidden -->
+                    <td ng-hide="selectedSong == {{$index + 1}}" class="song-item-number" data-song-number="{{$index + 1}}">
+                        <a ng-click="songClickHandler('notSelected', $index, song)" ng-Mouseover="mouseIsOver=true" ng-Mouseleave="mouseIsOver=false">
+                            <span ng-hide="mouseIsOver">
+                                  {{$index + 1}}
+                            </span>
+                            <span ng-show="mouseIsOver" class="ion-play">
+                            </span>
+                        </a>
+                    </td>
+                    <td ng-show="selectedSong == {{$index + 1}} && songIsPlaying">
+                        <a ng-click="songClickHandler('songIsPlaying', $index, song)" class="album-song-button"><span class="ion-pause"></span></a>
+                    </td>
+                    <td ng-show="selectedSong == {{$index + 1}} && !songIsPlaying">
+                        <a ng-click="songClickHandler('songIsPaused', $index, song)" class="album-song-button"><span class="ion-play"></span></a>
+                    </td>
                     <td class="song-item-title"> {{song.name}}</td>
                     <td class="song-item-duration">{{song.length}}</td>
                 </tr>
@@ -24,41 +38,49 @@
             <div class="container">
                 <div class="player-bar-control-group left-controls">
                     <a class="previous">
-                        <span class="ion-skip-backward"></span>
+                        <span ng-click="nextPrevSongClick(-1)" class="ion-skip-backward"></span>
                     </a>
+                    <!-- Only one of these two spans is displayed -->
+                    <span ng-show="songIsPlaying" >
                     <a class="play-pause">
-                        <span class="ion-play"></span>
+                        <span ng-click="playPauseClick()" class="ion-pause"></span>
                     </a>
+                    </span>
+                    <span ng-hide="songIsPlaying">
+                    <a class="play-pause">
+                        <span ng-click="playPauseClick()" class="ion-play"></span>
+                    </a>
+                    </span>
                     <a class="next">
-                        <span class="ion-skip-forward"></span>
+                        <span ng-click="nextPrevSongClick(1)" class="ion-skip-forward"></span>
                     </a>
                 </div>
                 <div class="player-bar-control-group currently-playing">
-                    <h2 class="song-name"></h2>
-                    <h2 class="artist-song-mobile"></h2>
+                    <h2 class="song-name">{{thisAlbum.songs[selectedSong-1].name}}</h2>
+                    <h2 class="artist-song-mobile">{{thisAlbum.songs[selectedSong-1].name}} - {{thisAlbum.artist}}</h2>
                     <div class="seek-control">
-                        <div class="seek-bar">
+                        <div ng-click="playerSeekBarClick()" class="seek-bar">
                             <div class="fill"></div>
                             <div class="thumb"></div>
                         </div>
-                        <div class="current-time">2:30</div>
-                        <div class="total-time">4:45</div>
+                        <div class="current-time">TBD{{currentTime}}</div>
+                        <!-- Refactor: need to use the totalTime derived from the sound file, not the one in the album info --> 
+                        <div class="total-time">{{thisAlbum.songs[selectedSong-1].length}}</div>
                     </div>
-                    <h3 class="artist-name"></h3>
+                    <h3 class="artist-name">{{thisAlbum.artist}}</h3>
                 </div>
                 <div class="player-bar-control-group right-controls">
                     <div class="volume">
                         <span class="ion-volume-high"></span>
                         <div class="seek-bar">
                             <div class="fill"></div>
-                            <div class="thumb"></div>
+                            <div ng-mousedown="thumbMousedown()" class="thumb"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/buzz/1.1.10/buzz.min.js"></script>
         <!-- <script src="scripts/fixtures.js"></script>
         <script src="scripts/album.js"></script> -->
     </body>
