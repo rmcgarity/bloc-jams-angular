@@ -10,11 +10,32 @@ ralphModule.controller("CollectionController", ["$scope", "albums", function($sc
 ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlayer", function($scope, albumPicasso, MusicPlayer) {
     MusicPlayer.currentAlbum = albumPicasso;
     $scope.thisAlbum = MusicPlayer.currentAlbum;
-    $scope.totalTime = MusicPlayer.totalTime;
     console.log("thisAlbum name: '" + $scope.thisAlbum.name + "'");
     $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
     $scope.songIsPlaying = false;
-    $scope.currentTime = MusicPlayer.currentTime;
+    
+    // Refactor: Move to the seekerbar directive on next lesson
+    var filterTimeCode = function(timeInSeconds) {
+        var totalSeconds = parseFloat(timeInSeconds);
+        var minutes = Math.floor(totalSeconds/60);
+        var residualSeconds = Math.ceil(totalSeconds - minutes*60);
+        return(minutes + ":" + ("0" + residualSeconds).slice(-2));
+    };
+    var updateSeekBarWhileSongPlays = function() {
+        if (MusicPlayer.currentSoundFile) {
+            MusicPlayer.currentSoundFile.bind("timeupdate", function(event) {
+                $scope.currentTime = filterTimeCode(MusicPlayer.currentSoundFile.getTime());
+                $scope.$apply();
+            });
+        }
+    }
+    var updatePlayerBarSong = function() {
+        MusicPlayer.currentSoundFile.bind("loadeddata", function(e) {
+            $scope.totalTime = filterTimeCode(MusicPlayer.currentSoundFile.getDuration());
+            $scope.$apply();
+            console.log("$scope.totalTime '" + $scope.totalTime + "'");
+        });
+    }
     
     $scope.songClickHandler = function(tableIndex, song) {
         // var index = 1;
@@ -23,34 +44,43 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
         $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
         $scope.songIsPlaying = true;
         MusicPlayer.currentSoundFile.play();
-        MusicPlayer.updatePlayerBarSong();
-        MusicPlayer.updateSeekBarWhileSongPlays();
+        // MusicPlayer.updatePlayerBarSong();
+        updatePlayerBarSong();
+        // MusicPlayer.updateSeekBarWhileSongPlays();
+        updateSeekBarWhileSongPlays();
     };
     $scope.playPauseClick = function() {
         console.log("playPause called");
-        if (MusicPlayer.currentSoundFile.isPaused()) {
-            MusicPlayer.currentSoundFile.play();
-            MusicPlayer.updateSeekBarWhileSongPlays();
-        } else {
-            MusicPlayer.currentSoundFile.pause();
+        if (MusicPlayer.currentSoundFile) {
+            if (MusicPlayer.currentSoundFile.isPaused()) {
+                MusicPlayer.currentSoundFile.play();
+                // MusicPlayer.updateSeekBarWhileSongPlays();
+                updateSeekBarWhileSongPlays();
+            } else {
+                MusicPlayer.currentSoundFile.pause();
+            }
+            $scope.songIsPlaying = !$scope.songIsPlaying;
         }
-        $scope.songIsPlaying = !$scope.songIsPlaying;
     };
     $scope.nextPrevSongClick = function(direction) {
         console.log("nexPreviousClick called");
-        var currentSongIndex = MusicPlayer.trackIndex(MusicPlayer.currentAlbum, MusicPlayer.currentSongFromAlbum);
-        // Increase for next or decrease for prev current by 1, modulo the number of songs
-        currentSongIndex = (currentSongIndex + MusicPlayer.currentAlbum.songs.length + direction) % MusicPlayer.currentAlbum.songs.length;
+        if (MusicPlayer.currentSoundFile) {
+            var currentSongIndex = MusicPlayer.trackIndex(MusicPlayer.currentAlbum, MusicPlayer.currentSongFromAlbum);
+            // Increase for next or decrease for prev current by 1, modulo the number of songs
+            currentSongIndex = (currentSongIndex + MusicPlayer.currentAlbum.songs.length + direction) % MusicPlayer.currentAlbum.songs.length;
 
-        // Set a new current song
-        MusicPlayer.setSong(currentSongIndex+1);
-        MusicPlayer.currentSoundFile.play();
-        MusicPlayer.updatePlayerBarSong();
-        MusicPlayer.updateSeekBarWhileSongPlays();
+            // Set a new current song
+            MusicPlayer.setSong(currentSongIndex+1);
+            MusicPlayer.currentSoundFile.play();
+            // MusicPlayer.updatePlayerBarSong();
+            updatePlayerBarSong();
+            // MusicPlayer.updateSeekBarWhileSongPlays();
+            updateSeekBarWhileSongPlays();
 
-        // Update the Player Bar and Song List
-        $scope.selectedSong = currentSongIndex +1;
-        $scope.songIsPlaying = true;
+            // Update the Player Bar and Song List
+            $scope.selectedSong = currentSongIndex +1;
+            $scope.songIsPlaying = true;
+        }
     };
 }]);
 
