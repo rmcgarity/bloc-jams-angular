@@ -13,6 +13,7 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
     console.log("thisAlbum name: '" + $scope.thisAlbum.name + "'");
     $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
     $scope.songIsPlaying = false;
+    $scope.currentTime = "";
     
     // Refactor: Move to the seekerbar directive on next lesson
     var filterTimeCode = function(timeInSeconds) {
@@ -21,14 +22,6 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
         var residualSeconds = Math.ceil(totalSeconds - minutes*60);
         return(minutes + ":" + ("0" + residualSeconds).slice(-2));
     };
-    var updateSeekBarWhileSongPlays = function() {
-        if (MusicPlayer.currentSoundFile) {
-            MusicPlayer.currentSoundFile.bind("timeupdate", function(event) {
-                $scope.currentTime = filterTimeCode(MusicPlayer.currentSoundFile.getTime());
-                $scope.$apply();
-            });
-        }
-    }
     var updatePlayerBarSong = function() {
         MusicPlayer.currentSoundFile.bind("loadeddata", function(e) {
             $scope.totalTime = filterTimeCode(MusicPlayer.currentSoundFile.getDuration());
@@ -36,6 +29,11 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
             console.log("$scope.totalTime '" + $scope.totalTime + "'");
         });
     }
+    var updateHtmlWithCurrentTimeAndRatio = function(currentTimeAndRatioUpdate) {
+        $scope.currentTime      = currentTimeAndRatioUpdate.currentTime;
+        $scope.$apply();
+        // $scope.seekBarFillRatio = currentTimeAndRatioUpdate.seekBarFillRatio;
+    };
     
     $scope.songClickHandler = function(tableIndex, song) {
         // var index = 1;
@@ -43,19 +41,16 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
         MusicPlayer.setSong(tableIndex+1);
         $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
         $scope.songIsPlaying = true;
-        MusicPlayer.currentSoundFile.play();
+        // Play a song - pass the callback that updates HTML
+        MusicPlayer.playSong(updateHtmlWithCurrentTimeAndRatio);
         // MusicPlayer.updatePlayerBarSong();
         updatePlayerBarSong();
-        // MusicPlayer.updateSeekBarWhileSongPlays();
-        updateSeekBarWhileSongPlays();
     };
     $scope.playPauseClick = function() {
         console.log("playPause called");
         if (MusicPlayer.currentSoundFile) {
             if (MusicPlayer.currentSoundFile.isPaused()) {
-                MusicPlayer.currentSoundFile.play();
-                // MusicPlayer.updateSeekBarWhileSongPlays();
-                updateSeekBarWhileSongPlays();
+                MusicPlayer.playSong(updateHtmlWithCurrentTimeAndRatio);
             } else {
                 MusicPlayer.currentSoundFile.pause();
             }
@@ -71,11 +66,9 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
 
             // Set a new current song
             MusicPlayer.setSong(currentSongIndex+1);
-            MusicPlayer.currentSoundFile.play();
+            MusicPlayer.playSong(updateHtmlWithCurrentTimeAndRatio);
             // MusicPlayer.updatePlayerBarSong();
             updatePlayerBarSong();
-            // MusicPlayer.updateSeekBarWhileSongPlays();
-            updateSeekBarWhileSongPlays();
 
             // Update the Player Bar and Song List
             $scope.selectedSong = currentSongIndex +1;

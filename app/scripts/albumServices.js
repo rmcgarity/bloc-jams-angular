@@ -19,11 +19,28 @@ ralphModule
         }
 
     };
+
+    var updateSeekBarWhileSongPlays = function(callBackToUpdateHtml) {
+        if (MusicPlayer.currentSoundFile) {
+            MusicPlayer.currentSoundFile.bind("timeupdate", function(event) {
+                var currentTime = filterTimeCode(MusicPlayer.currentSoundFile.getTime());
+                // Refactor: can this be MusicPlayer.currentTime / MusicPlayer.totalTime?
+                var seekBarFillRatio = currentTime / this.getDuration();
+                callBackToUpdateHtml({
+                    currentTime: currentTime,
+                    seekBarFillRatio: seekBarFillRatio
+                });
+                // var $seekBar = $('.seek-control .seek-bar');
+                // updateSeekPercentage(seekBarFillRatio);
+                // MusicPlayer.currentTime = filterTimeCode(MusicPlayer.currentSoundFile.getTime());
+            });
+        }
+    };
     
     // The following obuect of variables and functions is accessible outside this factory
     var MusicPlayer = {
-        // currentTime:                "2:30", // Replaces setCurrentTimeInPlayerBar function
-        // totalTime:                  "4:45", // Replaces setTotalTimeInPlayerBar function
+        currentTime:                "2:30", // Replaces setCurrentTimeInPlayerBar function
+        totalTime:                  "4:45", // Replaces setTotalTimeInPlayerBar function
         seekBarFPercentage:         null,
         currentAlbum:               null,
         currentlyPlayingSongNumber: null,
@@ -31,17 +48,10 @@ ralphModule
         currentSoundFile:           null,
         currentVolume:              80,
         
-        // updateSeekBarWhileSongPlays: function() {
-        //    if (MusicPlayer.currentSoundFile) {
-        //        MusicPlayer.currentSoundFile.bind("timeupdate", function(event) {
-        //            // Refactor in next lesson
-        //            // var seekBarFillRatio = this.getTime() / this.getDuration();
-        //            // var $seekBar = $('.seek-control .seek-bar');
-        //            // updateSeekPercentage(seekBarFillRatio);
-        //            MusicPlayer.currentTime = filterTimeCode(MusicPlayer.currentSoundFile.getTime());
-        //        });
-        //    }
-        //},
+        playSong: function(callBackToUpdateHtml) {
+            MusicPlayer.currentSoundFile.play();
+            updateSeekBarWhileSongPlays(callBackToUpdateHtml);
+        }, 
         
         // Refactor next lesson
         updateSeekPercentage: function($seekBar, seekBarFillRatio) {
