@@ -23,30 +23,30 @@ ralphModule
     var updateSeekBarWhileSongPlays = function(callBackToUpdateHtml) {
         if (MusicPlayer.currentSoundFile) {
             MusicPlayer.currentSoundFile.bind("timeupdate", function(event) {
-                var currentTime = filterTimeCode(MusicPlayer.currentSoundFile.getTime());
-                // Refactor: can this be MusicPlayer.currentTime / MusicPlayer.totalTime?
-                var seekBarFillRatio = currentTime / this.getDuration();
-                callBackToUpdateHtml({
-                    currentTime: currentTime,
-                    seekBarFillRatio: seekBarFillRatio
-                });
+                var currentTime = MusicPlayer.currentSoundFile.getTime();
+                var totalTime   = MusicPlayer.currentSoundFile.getDuration();
+                MusicPlayer.currentTime = filterTimeCode(currentTime);
+                MusicPlayer.totalTime   = filterTimeCode(totalTime);
+                MusicPlayer.seekBarFillRatio = currentTime / totalTime;
+                callBackToUpdateHtml();
+            });
                 // var $seekBar = $('.seek-control .seek-bar');
                 // updateSeekPercentage(seekBarFillRatio);
                 // MusicPlayer.currentTime = filterTimeCode(MusicPlayer.currentSoundFile.getTime());
-            });
         }
     };
     
-    // The following obuect of variables and functions is accessible outside this factory
+    // The following object of variables and functions is accessible outside this factory
     var MusicPlayer = {
-        currentTime:                "2:30", // Replaces setCurrentTimeInPlayerBar function
-        totalTime:                  "4:45", // Replaces setTotalTimeInPlayerBar function
-        seekBarFPercentage:         null,
+        currentTime:                "", // Replaces setCurrentTimeInPlayerBar function
+        totalTime:                  "", // Replaces setTotalTimeInPlayerBar function
+        seekBarPercentage:         null,
         currentAlbum:               null,
         currentlyPlayingSongNumber: null,
         currentSongFromAlbum:       null,
         currentSoundFile:           null,
         currentVolume:              80,
+        seekBarFillRatio:           0,
         
         playSong: function(callBackToUpdateHtml) {
             MusicPlayer.currentSoundFile.play();
@@ -98,13 +98,7 @@ ralphModule
             //}
         },
             
-        //updatePlayerBarSong: function() {
-        //    MusicPlayer.currentSoundFile.bind("loadeddata", function(e) {
-        //        MusicPlayer.totalTime = filterTimeCode(MusicPlayer.currentSoundFile.getDuration());
-        //    });
-        //},
-            
-        setSong: function(songNumber) {
+        setSong: function(songNumber, callBackToUpdateHtml) {
             if (MusicPlayer.currentSoundFile) {
                 MusicPlayer.currentSoundFile.stop();
             }
