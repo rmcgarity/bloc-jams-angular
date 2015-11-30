@@ -14,12 +14,19 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
     $scope.selectedSong = MusicPlayer.currentlyPlayingSongNumber;
     $scope.songIsPlaying = false;
     $scope.currentTime = "";
+
+    $scope.currentTime      = MusicPlayer.currentTime;
+    $scope.totalTime        = MusicPlayer.totalTime;
+    $scope.songRatio        = MusicPlayer.songRatio;
+    $scope.volumeRatio      = MusicPlayer.volumeRatio;
     
     var updateHtmlTimeInfo = function() {
-        $scope.currentTime      = MusicPlayer.currentTime;
-        $scope.totalTime        = MusicPlayer.totalTime;
-        $scope.seekBarFillRatio = MusicPlayer.seekBarFillRatio;
-        $scope.$apply();
+        $scope.$apply(function() {
+            $scope.currentTime      = MusicPlayer.currentTime;
+            $scope.totalTime        = MusicPlayer.totalTime;
+            $scope.songRatio        = MusicPlayer.songRatio;
+            $scope.volumeRatio      = MusicPlayer.volumeRatio;
+        });
     };
     
     $scope.songClickHandler = function(tableIndex, song) {
@@ -57,6 +64,12 @@ ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlaye
             $scope.selectedSong = currentSongIndex +1;
             $scope.songIsPlaying = true;
         }
+    };
+    $scope.songSeekClicker = function(songRatio) {
+        MusicPlayer.seek(songRatio);
+    };
+    $scope.volumeSeekClicker = function(volumeRatio) {
+        MusicPlayer.setVolume(volumeRatio);
     };
 }]);
 

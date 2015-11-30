@@ -1,5 +1,4 @@
-    <body class="album" ng-controller="AlbumController">
-        <main class="album-view container narrow">
+         <main class="album-view container narrow">
             <section class="clearfix">
                 <div class="column half">
                     <img src="{{thisAlbum.albumArtUrl}}" class="album-cover-art">
@@ -56,17 +55,17 @@
                     </a>
                     </span>
                     <a class="next">
-                        <span ng-click="nextPrevSongClick(1)" class="ion-skip-forward"></span>
+                        <spqan ng-click="nextPrevSongClick(1)" class="ion-skip-forward"></span>
                     </a>
                 </div>
                 <div class="player-bar-control-group currently-playing">
                     <h2 class="song-name">{{thisAlbum.songs[selectedSong-1].name}}</h2>
                     <h2 class="artist-song-mobile">{{thisAlbum.songs[selectedSong-1].name}} - {{thisAlbum.artist}}</h2>
                     <div class="seek-control">
-                        <div ng-click="playerSeekBarClick()" class="seek-bar">
-                            <div class="fill"></div>
-                            <div class="thumb"></div>
-                        </div>
+                        <span>
+                            <rcm-slider seek-click-handler="songSeekClicker(newSeekRatio)" 
+                                        seek-ratio="songRatio" update-on-move=false></rcm-slider-directive>
+                        </span>
                         <div class="current-time">{{currentTime}}</div>
                         <div class="total-time">{{totalTime}}</div>
                     </div>
@@ -75,15 +74,9 @@
                 <div class="player-bar-control-group right-controls">
                     <div class="volume">
                         <span class="ion-volume-high"></span>
-                        <div class="seek-bar">
-                            <div class="fill"></div>
-                            <div ng-mousedown="thumbMousedown()" class="thumb"></div>
-                        </div>
+                        <rcm-slider seek-click-handler="volumeSeekClicker(newSeekRatio)" 
+                                    seek-ratio="volumeRatio" update-on-move=true></rcm-slider-directive>
                     </div>
                 </div>
             </div>
         </section>
-        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-        <!-- <script src="scripts/fixtures.js"></script>
-        <script src="scripts/album.js"></script> -->
-    </body>
