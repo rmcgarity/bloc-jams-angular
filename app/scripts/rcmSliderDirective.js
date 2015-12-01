@@ -1,7 +1,7 @@
 ralphModule.directive("rcmSlider", function() {
     var linkFunction = function(scope, element, attributes) {
-        console.log("seekClickHandler: ", attributes.seekClickHandler);
         scope.rcmSeekClickHandler = function($event) {
+            console.log("Click");
             var newSeekRatio = calculateSeekRatio($event.pageX);
             scope.seekRatio = newSeekRatio;
             scope.seekClickHandler({newSeekRatio: newSeekRatio});
@@ -39,7 +39,7 @@ ralphModule.directive("rcmSlider", function() {
                 angular.element(window).off('mouseup'); 
                 scope.$apply();
                 // scope.rcmSeekClickHandler($event);
-            });                                            
+            });
         }
         var calculateSeekRatio = function(seekX) {
             var seekBarLeftX = element[0].getBoundingClientRect().left;
