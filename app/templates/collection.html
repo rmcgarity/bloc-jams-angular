@@ -1,21 +1,21 @@
-    <body class="collection" ng-controller="CollectionController">
-        <section class="album-covers container clearfix">
-            <div class="collection-album-container column fourth" ng-repeat="album in albums">
-                <a ui-sref="album">
-                    <img src="{{ album.image }}"/>
-                </a>
-                <div class="collection-album-info caption">
-                    <p>
-                        <a ui-sref="album" class="album-name"> {{ album.name }}
-                        <br/>
-                        <a ui-sref="album"> {{ album.composer }}
-                        <br/>
-                        {{ album.numberOfSongs }}
-                        <br/>
-                    </p>
-                </div>
-            </div>    
-        </section>
-        <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-     </body>
+<body class="collection" ng-controller="CollectionController">
+    <section class="album-covers container clearfix">
+        <div class="collection-album-container column fourth" ng-repeat="album in albums">
+            <a ui-sref="album">
+                <img src="{{ album.image }}"/>
+            </a>
+            <div class="collection-album-info caption">
+                <p>
+                    <a ui-sref="album" class="album-name"> {{ album.name }}
+                    <br/>
+                    <a ui-sref="album"> {{ album.composer }}
+                    <br/>
+                    {{ album.numberOfSongs }}
+                    <br/>
+                </p>
+            </div>
+        </div>    
+    </section>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+ </body>
 

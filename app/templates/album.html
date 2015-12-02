@@ -1,82 +1,82 @@
-         <main class="album-view container narrow">
-            <section class="clearfix">
-                <div class="column half">
-                    <img src="{{thisAlbum.albumArtUrl}}" class="album-cover-art">
-                </div>
-                <div class="album-view-details column half">
-                    <h2 class="album-view-title">{{thisAlbum.name}}</h2>
-                    <h3 class="album-view-artist">{{thisAlbum.artist}}</h3>
-                    <h5 class="album-view-release-info">{{thisAlbum.year}} {{thisAlbum.label}}</h5>
-                </div>
-            </section>
-            <table class="album-view-song-list">
-                <tr class="album-view-song-item" ng-repeat="song in thisAlbum.songs">
-                    <!-- Only one of the following three <td> items is shown - two are hidden -->
-                    
-                    <!-- Case 1: Didn't click on the currently selected song -->
-                    <td ng-hide="selectedSong == {{$index + 1}}" class="song-item-number" data-song-number="{{$index + 1}}">
-                        <a ng-click="songClickHandler($index, song)" ng-Mouseover="mouseIsOver=true" ng-Mouseleave="mouseIsOver=false">
-                            <span ng-hide="mouseIsOver"> <!-- show the number if mouse is not over the number -->
-                                  {{$index + 1}}
-                            </span>
-                            <span ng-show="mouseIsOver" class="ion-play"> <!-- show the play button if moust is over the number -->
-                            </span>
-                        </a>
-                    </td>
-                    <!-- Case 2: Song is selected and song is playing -->
-                    <td ng-show="selectedSong == {{$index + 1}} && songIsPlaying">
-                        <a ng-click="playPauseClick()" class="album-song-button"><span class="ion-pause"></span></a>
-                    </td>
-                    <!-- Case 3: Song is selected and song is paused -->
-                    <td ng-show="selectedSong == {{$index + 1}} && !songIsPlaying">
-                        <a ng-click="playPauseClick()" class="album-song-button"><span class="ion-play"></span></a>
-                    </td>
-                    <td class="song-item-title"> {{song.name}}</td>
-                    <td class="song-item-duration">{{song.length}}</td>
-                </tr>
-            </table>
-        </main>
+<main class="album-view container narrow">
+    <section class="clearfix">
+        <div class="column half">
+            <img src="{{thisAlbum.albumArtUrl}}" class="album-cover-art">
+        </div>
+        <div class="album-view-details column half">
+            <h2 class="album-view-title">{{thisAlbum.name}}</h2>
+            <h3 class="album-view-artist">{{thisAlbum.artist}}</h3>
+            <h5 class="album-view-release-info">{{thisAlbum.year}} {{thisAlbum.label}}</h5>
+        </div>
+    </section>
+    <table class="album-view-song-list">
+        <tr class="album-view-song-item" ng-repeat="song in thisAlbum.songs">
+            <!-- Only one of the following three <td> items is shown - two are hidden -->
 
-        <section class="player-bar">
-            <div class="container">
-                <div class="player-bar-control-group left-controls">
-                    <a class="previous">
-                        <span ng-click="nextPrevSongClick(-1)" class="ion-skip-backward"></span>
-                    </a>
-                    <!-- Only one of these two spans is displayed -->
-                    <span ng-show="songIsPlaying" >
-                    <a class="play-pause">
-                        <span ng-click="playPauseClick()" class="ion-pause"></span>
-                    </a>
+            <!-- Case 1: Didn't click on the currently selected song -->
+            <td ng-hide="selectedSong == {{$index + 1}}" class="song-item-number" data-song-number="{{$index + 1}}">
+                <a ng-click="songClickHandler($index, song)" ng-Mouseover="mouseIsOver=true" ng-Mouseleave="mouseIsOver=false">
+                    <span ng-hide="mouseIsOver"> <!-- show the number if mouse is not over the number -->
+                          {{$index + 1}}
                     </span>
-                    <span ng-hide="songIsPlaying">
-                    <a class="play-pause">
-                        <span ng-click="playPauseClick()" class="ion-play"></span>
-                    </a>
+                    <span ng-show="mouseIsOver" class="ion-play"> <!-- show the play button if moust is over the number -->
                     </span>
-                    <a class="next">
-                        <spqan ng-click="nextPrevSongClick(1)" class="ion-skip-forward"></span>
-                    </a>
-                </div>
-                <div class="player-bar-control-group currently-playing">
-                    <h2 class="song-name">{{thisAlbum.songs[selectedSong-1].name}}</h2>
-                    <h2 class="artist-song-mobile">{{thisAlbum.songs[selectedSong-1].name}} - {{thisAlbum.artist}}</h2>
-                    <div class="seek-control">
-                        <span>
-                            <rcm-slider seek-click-handler="songSeekClicker(newSeekRatio)" 
-                                        seek-ratio="songRatio" update-on-move=false></rcm-slider-directive>
-                        </span>
-                        <div class="current-time">{{currentTime}}</div>
-                        <div class="total-time">{{totalTime}}</div>
-                    </div>
-                    <h3 class="artist-name">{{thisAlbum.artist}}</h3>
-                </div>
-                <div class="player-bar-control-group right-controls">
-                    <div class="volume">
-                        <span class="ion-volume-high"></span>
-                        <rcm-slider seek-click-handler="volumeSeekClicker(newSeekRatio)" 
-                                    seek-ratio="volumeRatio" update-on-move=true></rcm-slider-directive>
-                    </div>
-                </div>
+                </a>
+            </td>
+            <!-- Case 2: Song is selected and song is playing -->
+            <td ng-show="selectedSong == {{$index + 1}} && songIsPlaying">
+                <a ng-click="playPauseClick()" class="album-song-button"><span class="ion-pause"></span></a>
+            </td>
+            <!-- Case 3: Song is selected and song is paused -->
+            <td ng-show="selectedSong == {{$index + 1}} && !songIsPlaying">
+                <a ng-click="playPauseClick()" class="album-song-button"><span class="ion-play"></span></a>
+            </td>
+            <td class="song-item-title"> {{song.name}}</td>
+            <td class="song-item-duration">{{song.length}}</td>
+        </tr>
+    </table>
+</main>
+
+<section class="player-bar">
+    <div class="container">
+        <div class="player-bar-control-group left-controls">
+            <a class="previous">
+                <span ng-click="nextPrevSongClick(-1)" class="ion-skip-backward"></span>
+            </a>
+            <!-- Only one of these two spans is displayed -->
+            <span ng-show="songIsPlaying" >
+            <a class="play-pause">
+                <span ng-click="playPauseClick()" class="ion-pause"></span>
+            </a>
+            </span>
+            <span ng-hide="songIsPlaying">
+            <a class="play-pause">
+                <span ng-click="playPauseClick()" class="ion-play"></span>
+            </a>
+            </span>
+            <a class="next">
+                <spqan ng-click="nextPrevSongClick(1)" class="ion-skip-forward"></span>
+            </a>
+        </div>
+        <div class="player-bar-control-group currently-playing">
+            <h2 class="song-name">{{thisAlbum.songs[selectedSong-1].name}}</h2>
+            <h2 class="artist-song-mobile">{{thisAlbum.songs[selectedSong-1].name}} - {{thisAlbum.artist}}</h2>
+            <div class="seek-control">
+                <span>
+                    <rcm-slider seek-click-handler="songSeekClicker(newSeekRatio)" 
+                                seek-ratio="songRatio" update-on-move=false></rcm-slider-directive>
+                </span>
+                <div class="current-time">{{currentTime}}</div>
+                <div class="total-time">{{totalTime}}</div>
             </div>
-        </section>
+            <h3 class="artist-name">{{thisAlbum.artist}}</h3>
+        </div>
+        <div class="player-bar-control-group right-controls">
+            <div class="volume">
+                <span class="ion-volume-high"></span>
+                <rcm-slider seek-click-handler="volumeSeekClicker(newSeekRatio)" 
+                            seek-ratio="volumeRatio" update-on-move=true></rcm-slider-directive>
+            </div>
+        </div>
+    </div>
+</section>
