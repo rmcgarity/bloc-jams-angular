@@ -1,6 +1,19 @@
 body.landing {
      background-color: rgb(58,23,63); /* sets the background color to an RGB value (see below) */
 }
+body.collection {
+    background-image: url(/assets/images/blurred_backgrounds/blur_bg_2.jpg);
+    background-repeat: repeat-y;
+    background-position: center center;
+    background-size: cover;
+}
+body.album {
+    background-image: url(/assets/images/blurred_backgrounds/blur_bg_3.jpg);
+    background-repeat: repeat-y;
+    background-position: center center;
+    background-size: cover;
+    padding-bottom: 150px;
+}
 .hero-content {
      position: relative; 
      min-height: 600px; /* hero content element must be _at least_ 600 pixels */

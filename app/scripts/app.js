@@ -83,16 +83,55 @@ ralphModule.config(function($stateProvider, $locationProvider) {
         .state('landing', {
             url: '/',
             controller: 'LandingController',
-            templateUrl: '/templates/landing.html'
+            templateUrl: '/templates/landing.html',
+            data : {
+                bodyClass : 'landing'
+            }
         })
         .state('collection', {
             url: '/collection',
             controller: 'CollectionController',
-            templateUrl: '/templates/collection.html'
+            templateUrl: '/templates/collection.html',
+            data : {
+                bodyClass : 'collection'
+            }
         })
         .state('album', {
             url: '/album',
             controller: 'AlbumController',
-            templateUrl: '/templates/album.html'
+            templateUrl: '/templates/album.html',
+            data : {
+                bodyClass : 'album'
+            }
         })
 });
+// This directive enables the overall html body's class properties to be custom
+// for each route (landing, collection, and album).
+ralphModule.directive('bodyClassChooser', function($rootScope) {
+    var linkFunction = function(scope, element, attributes) {
+        $rootScope.$on("$stateChangeSuccess", 
+            function(event, toState, toParams, fromState, fromParams) {
+            var fromBodyClass = angular.isDefined(fromState.data) &&
+                            angular.isDefined(fromState.data.bodyClass) 
+                            ? fromState.data.bodyClass : null;
+            var toBodyClass = angular.isDefined(toState.data) &&
+                            angular.isDefined(toState.data.bodyClass) 
+                            ? toState.data.bodyClass : null;
+            
+            if (fromBodyClass != toBodyClass) {
+                if (fromBodyClass) {
+                    element.removeClass(fromBodyClass);
+                }
+                if (toBodyClass) {
+                    element.addClass(toBodyClass);
+                }
+            }
+            
+        });
+    }
+    return {
+        restrict: "A",
+        scope: {},
+        link: linkFunction
+    }
+})
