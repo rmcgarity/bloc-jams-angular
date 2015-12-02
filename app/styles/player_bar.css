@@ -99,7 +99,7 @@
 }
 
 .seek-bar {
-    height: 0.25rem;
+    height: 0.5rem;
     background: rgba(255, 255, 255, 0.3);
     border-radius: 2px;
     position: relative;
@@ -109,20 +109,20 @@
 .seek-bar .fill {
     background: white;
     /* width: 20%; */
-    height: 0.25rem;
+    height: 0.5rem;
     border-radius: 2px;
 }
 
 .seek-bar .thumb {
     position: absolute;
-    height: 0.5rem;
-    width: 0.5rem;
+    height: 1rem;
+    width: 1rem;
     background: white;
     /* left: 20%; */
     top: 50%;
     /* #1 */
-    margin-left: -0.25rem;
-    margin-top: -0.25rem;
+    margin-left: -0.50rem;
+    margin-top: -0.50rem;
     border-radius: 50%;
     cursor: pointer;
     transition: width 100ms ease-in-out,
@@ -132,10 +132,10 @@
 }
 
 .seek-bar:hover .thumb {
-    width: 1.1rem;
-    height: 1.1rem;
-    margin-top: -0.5rem;
-    margin-left: -0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: -0.75rem;
+    margin-left: -0.75rem;
 }
 
 .player-bar .volume {

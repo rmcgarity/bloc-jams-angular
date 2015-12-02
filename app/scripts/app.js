@@ -7,7 +7,7 @@ ralphModule.controller("LandingController", function($scope) {
 ralphModule.controller("CollectionController", ["$scope", "albums", function($scope, albums) {
     $scope.albums = albums;
 }]);
-ralphModule.controller("AlbumController", ["$scope", "albumPicasso", "MusicPlayer", function($scope, albumPicasso, MusicPlayer) {
+ralphModule.controller("AlbumController", ["$scope", "$document", "albumPicasso", "MusicPlayer", function($scope, $document, albumPicasso, MusicPlayer) {
     MusicPlayer.currentAlbum = albumPicasso;
     $scope.thisAlbum = MusicPlayer.currentAlbum;
     console.log("thisAlbum name: '" + $scope.thisAlbum.name + "'");

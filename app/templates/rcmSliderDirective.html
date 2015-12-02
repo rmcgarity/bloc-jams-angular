@@ -1,5 +1,5 @@
 <div ng-click="rcmSeekClickHandler($event)" class="seek-bar">
-    <div class="fill" style="width: {{seekRatio *100}}%"></div>
-    <div class="thumb" style="left: {{(rcmUseNewRatio ? rcmNewRatio : seekRatio) * 100}}%" 
+    <div class="fill" ng-attr-style="width: {{seekRatio * 100}}%"></div>
+    <div class="thumb" ng-attr-style="left: {{(rcmUseNewRatio ? rcmNewRatio : seekRatio) * 100}}%" 
          ng-mousedown="rcmSeekMouseDownHandler($event)"></div>
 </div>

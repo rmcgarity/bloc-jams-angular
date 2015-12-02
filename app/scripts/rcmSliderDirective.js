@@ -1,4 +1,4 @@
-ralphModule.directive("rcmSlider", function() {
+ralphModule.directive("rcmSlider", function($document) {
     var linkFunction = function(scope, element, attributes) {
         scope.rcmSeekClickHandler = function($event) {
             console.log("Click");
@@ -14,7 +14,7 @@ ralphModule.directive("rcmSlider", function() {
             var sliderWidth = element.prop("clientWidth"); // bar width
             console.log("MouseDown");
             // After mousedown, set up tracking mouse moves:
-            angular.element(window).on('mousemove', function($event) {
+            $document.on('mousemove', function($event) {
                 var newRatio = calculateSeekRatio($event.pageX);
                 if (scope.updateOnMove) {
                     // use parent's seek ratio, and trigger parent updates:
@@ -28,15 +28,15 @@ ralphModule.directive("rcmSlider", function() {
                 scope.$apply();
             });
             // After mousedown, set up looking for mouseup: 
-            angular.element(window).on('mouseup', function($event) {
+            $document.on('mouseup', function($event) {
                 var finalRatio = calculateSeekRatio($event.pageX);
                 scope.seekRatio = finalRatio; // update in case user doesn't in his code
                 scope.seekClickHandler({newSeekRatio: finalRatio}); // trigger parent updates
                 scope.$apply();
                 console.log("Mouse Up");
                 scope.rcmUseNewRatio = false; // Force slider template to use parent seekRatio
-                angular.element(window).off('mousemove'); // terminate tracking moves
-                angular.element(window).off('mouseup'); 
+                $document.off('mousemove'); // terminate tracking moves
+                $document.off('mouseup');
                 scope.$apply();
                 // scope.rcmSeekClickHandler($event);
             });

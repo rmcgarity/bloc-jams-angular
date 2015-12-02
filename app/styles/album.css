@@ -52,6 +52,10 @@ body.album {
     min-width: 30px;
 }
 
+.song-item-number:hover {
+    cursor: pointer;
+}
+
 .song-item-title {
     width: 80%;
 }
@@ -78,6 +82,7 @@ th {
     display: inline-block;
     width: 28px;
     height: 28px;
+    margin-left: -0.5rem;
 }
 
 .album-song-button:hover {

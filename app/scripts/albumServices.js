@@ -14,10 +14,12 @@ ralphModule
             MusicPlayer.currentSoundFile.bind("timeupdate", function(event) {
                 var currentTime = MusicPlayer.currentSoundFile.getTime();
                 var totalTime   = MusicPlayer.currentSoundFile.getDuration();
-                MusicPlayer.currentTime = filterTimeCode(currentTime);
-                MusicPlayer.totalTime   = filterTimeCode(totalTime);
-                MusicPlayer.songRatio   = currentTime / totalTime;
-                callBackToUpdateHtml();
+                if (isFinite(totalTime)) {
+                    MusicPlayer.currentTime = filterTimeCode(currentTime);
+                    MusicPlayer.totalTime   = filterTimeCode(totalTime);
+                    MusicPlayer.songRatio   = currentTime / totalTime;
+                    callBackToUpdateHtml();
+                }
             });
         }
     };
