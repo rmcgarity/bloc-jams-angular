@@ -12,22 +12,17 @@ ralphModule
     var updateSeekBarWhileSongPlays = function(callBackToUpdateHtml) {
         if (MusicPlayer.currentSoundFile) {
             MusicPlayer.currentSoundFile.bind("timeupdate", function(event) {
-                var currentTime = MusicPlayer.currentSoundFile.getTime();
-                var totalTime   = MusicPlayer.currentSoundFile.getDuration();
-                if (isFinite(totalTime)) {
-                    MusicPlayer.currentTime = filterTimeCode(currentTime);
-                    MusicPlayer.totalTime   = filterTimeCode(totalTime);
-                    MusicPlayer.songRatio   = currentTime / totalTime;
-                    callBackToUpdateHtml();
-                }
+                MusicPlayer.currentTime = MusicPlayer.currentSoundFile.getTime();
+                MusicPlayer.totalTime   = MusicPlayer.currentSoundFile.getDuration();
+                callBackToUpdateHtml();
             });
         }
     };
     
     // The following object of variables and functions is accessible outside this factory
     var MusicPlayer = {
-        currentTime:                "", // Replaces setCurrentTimeInPlayerBar function
-        totalTime:                  "", // Replaces setTotalTimeInPlayerBar function
+        currentTime:                null, 
+        totalTime:                  null, 
         currentAlbum:               null,
         currentlyPlayingSongNumber: null,
         currentSongFromAlbum:       null,

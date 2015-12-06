@@ -1,5 +1,4 @@
 var ralphModule = angular.module('ralphApp', ['ui.router']);
-// var ralphModule = angular.module('ralphApp', ['ui.router']);
 
 ralphModule.controller("LandingController", ["$scope", "$window", function($scope, $window) {
     $scope.blocTagline = "Turn the music up!";
@@ -137,4 +136,16 @@ ralphModule.directive('bodyClassChooser', function($rootScope) {
         scope: {},
         link: linkFunction
     }
-})
+});
+ralphModule.filter("convertToMinSec", function() {
+    return function(timeInSeconds) {
+        var returnString = "";
+        if (isFinite(timeInSeconds) && (timeInSeconds != null)) {
+            var totalSeconds = parseFloat(timeInSeconds);
+            var minutes = Math.floor(totalSeconds/60);
+            var residualSeconds = Math.ceil(totalSeconds - minutes*60);
+            returnString = minutes + ":" + ("0" + residualSeconds).slice(-2);
+        }
+        return returnString;
+    };
+});

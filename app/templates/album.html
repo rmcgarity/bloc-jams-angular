@@ -66,8 +66,8 @@
                     <rcm-slider seek-click-handler="songSeekClicker(newSeekRatio)" 
                                 seek-ratio="songRatio" update-on-move=false></rcm-slider-directive>
                 </span>
-                <div class="current-time">{{currentTime}}</div>
-                <div class="total-time">{{totalTime}}</div>
+                <div class="current-time">{{currentTime | convertToMinSec}}</div>
+                <div class="total-time">{{totalTime | convertToMinSec}}</div>
             </div>
             <h3 class="artist-name">{{thisAlbum.artist}}</h3>
         </div>
