@@ -1,7 +1,7 @@
 # Bloc-Jams-Angular
 A digital music player, like Spotify. Written in angular, using [grunt](http://gruntjs.com). Uses the [Buzz!](http://buzz.jaysalvat.com) audio API library.
 
-####Example Screenshot:
+####Example Screenshot
 ![Bloc Jams](https://github.com/rmcgarity/foundation/blob/master/assets/images/Bloc-Jams-Foundation%20Screen%20Shot.JPG "Bloc-Jams")
 
 ####Features
@@ -13,7 +13,8 @@ A digital music player, like Spotify. Written in angular, using [grunt](http://g
 * Adjust volume
 * Auto-adjusts view for different window sizes
 
-####Note: I began this project by refactoring my earlier [foundation](https://github.com/rmcgarity) project.
+####Note
+I began this project by refactoring my earlier [foundation](https://github.com/rmcgarity) project.
 
 ####Installation
 ```
@@ -27,7 +28,7 @@ $ grunt
 ```
 Then navigate to http://localhost:3000/album
 
-####Contact:
+####Contact
 * ralph_mcgarity@yahoo.com
 
 #### Directory Structure
