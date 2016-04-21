@@ -38,16 +38,29 @@ Then navigate to http://localhost:3000/album
 ├── README.md
 ├── app
 │   ├── assets
-│   │   └── images
-│   │       └── bloc-logo-white.png
+│   │   └── images (not detailed)
+│   │   └── music (not detailed)
 │   ├── pages
 │   │   └── index.html
 │   ├── scripts
+│   │   └── albumServices.js
 │   │   └── app.js
+│   │   └── collectionServices.js
+│   │   └── fixtures.js
+│   │   └── rcmSliderDirective.js
 │   ├── styles
-│   │   └── style.css
+│   │   └── album.css
+│   │   └── collection.css
+│   │   └── landing.css
+│   │   └── main.css
+│   │   └── normalize.css
+│   │   └── player_bar.css
 │   └── templates
-│       └── home.html
+│   │   └── album.html
+│   │   └── collection.html
+│   │   └── landing.html
+│   │   └── rcmSliderDirective.html
+├── Gruntfile.js
 ├── package.json
 └── server.js
 ```
@@ -57,10 +70,8 @@ A list of the Grunt plugins in this application.
 [Grunt watch](https://github.com/gruntjs/grunt-contrib-watch) watches for changes to file content and then executes Grunt tasks when a change is detected.
 
 ##### Copy
-
 [Grunt copy](https://github.com/gruntjs/grunt-contrib-copy) copies files from our development folders and puts them in the folder that will be served with the frontend of your application.
 
 ##### Clean
-
 [Grunt clean](https://github.com/gruntjs/grunt-contrib-clean) "cleans" or removes all files in your distribution folder (`dist`) so that logic in your stylesheets, templates, or scripts isn't accidentally overridden by previous code in the directory.
 
