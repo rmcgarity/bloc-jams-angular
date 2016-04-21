@@ -2,7 +2,7 @@
 A digital music player, like Spotify. Written in angular, using [grunt](http://gruntjs.com). Uses the [Buzz!](http://buzz.jaysalvat.com) audio API library.
 
 ####Example Screenshot
-![Bloc Jams](https://github.com/rmcgarity/foundation/blob/master/assets/images/Bloc-Jams-Foundation%20Screen%20Shot.JPG "Bloc-Jams")
+![Bloc Jams](https://github.com/rmcgarity/bloc-jams-angular/blob/master/app/assets/images/Bloc-Jams-Angular-screenshot.JPG "Bloc-Jams")
 
 ####Features
 * Click on a collection (album)
