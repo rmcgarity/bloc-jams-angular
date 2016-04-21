@@ -14,7 +14,7 @@ A digital music player, like Spotify. Written in angular, using [grunt](http://g
 * Auto-adjusts view for different window sizes
 
 ####Note
-I began this project by refactoring my earlier [foundation](https://github.com/rmcgarity) project.
+I began this project by refactoring my earlier [foundation](https://github.com/rmcgarity/foundation) project.
 
 ####Installation
 ```
